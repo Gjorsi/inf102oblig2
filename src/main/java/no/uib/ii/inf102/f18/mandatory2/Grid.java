@@ -11,7 +11,7 @@ public class Grid {
         int n = io.getInt();
         int m = io.getInt();
         
-        WeightedDirectedGraph graph = new WeightedDirectedGraph(n*m);
+        IGraph<Integer> graph = new DirectedGraph(n*m);
         
         String line = "";
         int weight = 0;
@@ -26,32 +26,23 @@ public class Grid {
                 
                 // can jump to a vertex going east in grid
                 if (j+weight <= m) {
-                    graph.addWeightedEdge(cur-1, cur+weight-1, weight);
+                    graph.addEdge(cur-1, cur+weight-1);
                 }
                 
                 // can jump to a vertex going south in grid
                 if (i+weight <= n) {
-                    graph.addWeightedEdge(cur-1, cur+m*weight-1, weight);
+                    graph.addEdge(cur-1, cur+m*weight-1);
                 }
                 
                 // can jump to a vertex going west in grid
                 if (j-weight > 0) {
-                    graph.addWeightedEdge(cur-1, cur-weight-1, weight);
+                    graph.addEdge(cur-1, cur-weight-1);
                 }
                 
                 // can jump to a vertex going north in grid
                 if (i-weight > 0) {
-                    graph.addWeightedEdge(cur-1, cur-m*weight-1, weight);
+                    graph.addEdge(cur-1, cur-m*weight-1);
                 }
-            }
-        }
-        
-        System.out.println("vertices: " + graph.getSize());
-        System.out.println("n of edges: " + graph.nEdges());
-        
-        for (int i=0; i<graph.getSize(); i++) {
-            for (Edge edge : graph.adj(i)) {
-                System.out.println("Edge from " + edge.source + " to " + edge.dest + ", weight " + edge.weight);
             }
         }
         
@@ -63,7 +54,7 @@ public class Grid {
         io.close();
     }
 
-    private static int breadthFirstSearch(WeightedDirectedGraph graph, int target) {
+    private static int breadthFirstSearch(IGraph<Integer> graph, int target) {
         int distance[] = new int[target+1];
         int parent[] = new int[target+1];
         for (int i=1; i<=target; i++) {
@@ -76,15 +67,12 @@ public class Grid {
         
         while (!queue.isEmpty()) {
             int vertex = queue.poll();
-//            System.out.println("current vertex: " + vertex);
-            for (Edge edge : graph.adj(vertex)) {
-                if (parent[edge.source] == edge.dest) continue;
-                
-                if (distance[edge.dest] > (distance[edge.source] + edge.weight)) {
-                    parent[edge.dest] = edge.source;
-                    distance[edge.dest] = distance[edge.source] + edge.weight;
+            for (int nbr : graph.adj(vertex)) {
+                if (distance[nbr] > (distance[vertex] + 1)) {
+                    parent[nbr] = vertex;
+                    distance[nbr] = distance[vertex] + 1;
+                    queue.add(nbr);
                 }
-                queue.add(edge.dest);
             }
         }
         
