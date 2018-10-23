@@ -15,15 +15,6 @@ public interface IGraph<E> {
     void addEdge(int u, int v);
     
     /**
-     * Add weighted edge between vertex u and vertex v
-     * 
-     * @param u vertex 
-     * @param v vertex
-     * @param weight weight of edge
-     */
-    void addWeightedEdge(int u, int v, int weight);
-    
-    /**
      * @return number of vertices in graph
      */
     int getSize();

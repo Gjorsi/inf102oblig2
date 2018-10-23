@@ -47,8 +47,4 @@ public class UndirectedGraph implements IGraph<Integer> {
         return this.adjList[u];
     }
 
-    @Override
-    public void addWeightedEdge(int u, int v, int weight) {
-    }
-
 }
