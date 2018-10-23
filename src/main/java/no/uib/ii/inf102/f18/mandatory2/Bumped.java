@@ -46,6 +46,7 @@ public class Bumped {
         
         while(!working.isEmpty()) {
             Vertex cur = working.poll();
+            
             for(Edge e : cur.nbrs) {
                 Vertex nbr = graph.getVertex(e.dest);
                 if (parent[nbr.id()] == cur.id()) continue; //unnecessary?
@@ -63,13 +64,13 @@ public class Bumped {
                 } else {
                     
                     //update distance using roads only
-                    if (cur.distance + e.weight < nbr.distance) {
+                    if (cur.distance < Long.MAX_VALUE && (cur.distance + e.weight < nbr.distance)) {
                         nbr.distance = cur.distance+e.weight;
                         update = true;
                     }
                     
                     //update flightDistance to nbr if there is a path to cur using a flight
-                    if (cur.flightDistance + e.weight < nbr.flightDistance) {
+                    if (cur.flightDistance < Long.MAX_VALUE && (cur.flightDistance + e.weight < nbr.flightDistance)) {
                         nbr.flightDistance = cur.flightDistance + e.weight;
                         update = true;
                     }

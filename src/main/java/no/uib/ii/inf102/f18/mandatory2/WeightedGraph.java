@@ -12,7 +12,6 @@ public class WeightedGraph {
         this.nV = n;
         
         for (int i=0; i<n; i++) {
-            // inserting initial distances of Integer.MAX_VALUE/2 due to problems with integer overflow - TEMPORARY FIX
             this.vertices.put(i, new Vertex(i, Long.MAX_VALUE, Long.MAX_VALUE));
         }
     }
