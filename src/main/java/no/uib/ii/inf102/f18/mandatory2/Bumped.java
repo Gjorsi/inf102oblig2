@@ -3,6 +3,10 @@ package no.uib.ii.inf102.f18.mandatory2;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+/**
+ * @author Carl August Gjørsvik
+ *
+ */
 public class Bumped {
 
     public static void main(String[] args) {
@@ -12,10 +16,12 @@ public class Bumped {
         
         WeightedGraph graph = new WeightedGraph(n);
         
+        // read and add road edges
         for (int i=0; i<m; i++) {
             graph.addEdge(io.getInt(), io.getInt(), io.getInt());
         }
         
+        // read and add flightRoute edges
         for (int i=0; i<f; i++) {
             graph.addFlight(io.getInt(), io.getInt());
         }
@@ -42,25 +48,28 @@ public class Bumped {
             Vertex cur = working.poll();
             for(Edge e : cur.nbrs) {
                 Vertex nbr = graph.getVertex(e.dest);
-                if (parent[nbr.id()] == cur.id()) continue;
+                if (parent[nbr.id()] == cur.id()) continue; //unnecessary?
                 
                 boolean update = false;
                 
-                //edge is a flightRoute, update flightDistance if it provides a shorted route
+                //edge is a flightRoute, update flightDistance if it provides a shorter route
                 if (e.flightRoute) {
                     if (cur.distance < nbr.flightDistance) {
                         nbr.flightDistance = cur.distance;
                         update = true;
                     }
+                    
                 //edge is a road, update nbr's road distance and flightDistance if necessary
                 } else {
+                    
                     //update distance using roads only
                     if (cur.distance + e.weight < nbr.distance) {
                         nbr.distance = cur.distance+e.weight;
                         update = true;
                     }
-                    //update flightDistance to nbr
-                    if (cur.flightDistance < Integer.MAX_VALUE && (cur.flightDistance + e.weight < nbr.flightDistance)) {
+                    
+                    //update flightDistance to nbr if there is a path to cur using a flight
+                    if (cur.flightDistance + e.weight < nbr.flightDistance) {
                         nbr.flightDistance = cur.flightDistance + e.weight;
                         update = true;
                     }

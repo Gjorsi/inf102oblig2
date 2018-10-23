@@ -4,11 +4,11 @@ import java.util.LinkedList;
 
 public class Vertex implements Comparable<Vertex> {
     private int id;
-    public int distance;
-    public int flightDistance;
+    public long distance;
+    public long flightDistance;
     public LinkedList<Edge> nbrs;
     
-    public Vertex(int id, int distance, int flightDistance) {
+    public Vertex(int id, long distance, long flightDistance) {
         this.id = id;
         this.distance = distance;
         this.flightDistance = flightDistance;
@@ -21,7 +21,7 @@ public class Vertex implements Comparable<Vertex> {
 
     @Override
     public int compareTo(Vertex that) {
-        return Integer.compare(Math.min(this.distance,  this.flightDistance), Math.min(that.distance, that.flightDistance));
+        return Long.compare(Math.min(this.distance,  this.flightDistance), Math.min(that.distance, that.flightDistance));
     }
     
 }
