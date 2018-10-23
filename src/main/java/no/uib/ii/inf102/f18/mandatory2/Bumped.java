@@ -22,7 +22,7 @@ public class Bumped {
         
         dijkstras(graph, s, t);
         
-        io.println(graph.getVertex(t).distance);
+        io.println(Math.min(graph.getVertex(t).distance, graph.getVertex(t).flightDistance));
         
         io.close();
     }
@@ -31,22 +31,46 @@ public class Bumped {
         
         Queue<Vertex> working = new PriorityQueue<>();
         int parent[] = new int[graph.getSize()];
+        for (int i=0; i<parent.length; i++) {
+            parent[i] = -1;
+        }
         graph.getVertex(s).distance = 0;
         
         working.add(graph.getVertex(s));
         
-        A:while(!working.isEmpty()) {
+        while(!working.isEmpty()) {
             Vertex cur = working.poll();
             for(Edge e : cur.nbrs) {
                 Vertex nbr = graph.getVertex(e.dest);
                 if (parent[nbr.id()] == cur.id()) continue;
-                if (nbr.distance > cur.distance + e.weight) {
-                    nbr.distance = cur.distance+e.weight;
+                
+                boolean update = false;
+                
+                //edge is a flightRoute, update flightDistance if it provides a shorted route
+                if (e.flightRoute) {
+                    if (cur.distance < nbr.flightDistance) {
+                        nbr.flightDistance = cur.distance;
+                        update = true;
+                    }
+                //edge is a road, update nbr's road distance and flightDistance if necessary
+                } else {
+                    //update distance using roads only
+                    if (cur.distance + e.weight < nbr.distance) {
+                        nbr.distance = cur.distance+e.weight;
+                        update = true;
+                    }
+                    //update flightDistance to nbr
+                    if (cur.flightDistance < Integer.MAX_VALUE && (cur.flightDistance + e.weight < nbr.flightDistance)) {
+                        nbr.flightDistance = cur.flightDistance + e.weight;
+                        update = true;
+                    }
+                }
+                
+                if (update) {
                     parent[nbr.id()] = cur.id();
                     working.offer(nbr);
                 }
             }
         }
     }
-
 }

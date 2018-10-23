@@ -12,13 +12,14 @@ public class WeightedGraph {
         this.nV = n;
         
         for (int i=0; i<n; i++) {
-            this.vertices.put(i, new Vertex(i, Integer.MAX_VALUE));
+            // inserting initial distances of Integer.MAX_VALUE/2 due to problems with integer overflow - TEMPORARY FIX
+            this.vertices.put(i, new Vertex(i, Integer.MAX_VALUE/2, Integer.MAX_VALUE/2));
         }
     }
     
     public void addEdge(int u, int v, int weight) {
-        vertices.get(u).nbrs.add(new Edge(u,v,weight));
-        vertices.get(v).nbrs.add(new Edge(v,u,weight));
+        vertices.get(u).nbrs.add(new Edge(v,weight, false));
+        vertices.get(v).nbrs.add(new Edge(u,weight, false));
         nE++;
     }
 
@@ -50,9 +51,6 @@ public class WeightedGraph {
     }
     
     public void addFlight(int u, int v) {
-        // might be slow if there are many edges per vertex
-        for (Edge e : vertices.get(u).nbrs) {
-            if (e.dest == v) e.flightRoute = true;
-        }
+        vertices.get(u).nbrs.add(new Edge(v, 0, true));
     }
 }

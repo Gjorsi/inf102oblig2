@@ -2,16 +2,14 @@ package no.uib.ii.inf102.f18.mandatory2;
 
 public class Edge {
 
-    int source;
     int dest;
     int weight;
     boolean flightRoute;
     
-    public Edge (int source, int destination, int weight) {
-        this.source = source;
+    public Edge (int destination, int weight, boolean flight) {
         this.dest = destination;
         this.weight = weight;
-        this.flightRoute = false;
+        this.flightRoute = flight;
     }
 
 }
