@@ -33,13 +33,18 @@ public class Bumped {
         io.close();
     }
 
+    /**
+     * A modified implementation of Dijkstra's shortest path. <br>
+     * It takes into account that some edges are "flightRoutes", with cost zero,
+     * but only one flight might be used in the path
+     * 
+     * @param graph
+     * @param s
+     * @param t
+     */
     private static void dijkstras(WeightedGraph graph, int s, int t) {
         
         Queue<Vertex> working = new PriorityQueue<>();
-        int parent[] = new int[graph.getSize()];
-        for (int i=0; i<parent.length; i++) {
-            parent[i] = -1;
-        }
         graph.getVertex(s).distance = 0;
         
         working.add(graph.getVertex(s));
@@ -49,7 +54,6 @@ public class Bumped {
             
             for(Edge e : cur.nbrs) {
                 Vertex nbr = graph.getVertex(e.dest);
-                if (parent[nbr.id()] == cur.id()) continue; //unnecessary?
                 
                 boolean update = false;
                 
@@ -77,7 +81,6 @@ public class Bumped {
                 }
                 
                 if (update) {
-                    parent[nbr.id()] = cur.id();
                     working.offer(nbr);
                 }
             }

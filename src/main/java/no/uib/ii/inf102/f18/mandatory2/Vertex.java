@@ -3,7 +3,7 @@ package no.uib.ii.inf102.f18.mandatory2;
 import java.util.LinkedList;
 
 public class Vertex implements Comparable<Vertex> {
-    private int id;
+    public int id;
     public long distance;
     public long flightDistance;
     public LinkedList<Edge> nbrs;
@@ -13,10 +13,6 @@ public class Vertex implements Comparable<Vertex> {
         this.distance = distance;
         this.flightDistance = flightDistance;
         this.nbrs = new LinkedList<>();
-    }
-    
-    public int id() {
-        return this.id;
     }
 
     @Override
