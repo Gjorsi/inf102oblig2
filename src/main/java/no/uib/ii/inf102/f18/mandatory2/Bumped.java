@@ -36,11 +36,16 @@ public class Bumped {
     /**
      * A modified implementation of Dijkstra's shortest path. <br>
      * It takes into account that some edges are "flightRoutes", with cost zero,
-     * but only one flight might be used in the path
+     * but only one flight might be used in the path.
      * 
-     * @param graph
-     * @param s
-     * @param t
+     * To make sure the shortest path is chosen with maximum one flight,
+     * this implementation stores two separate distance-variables for each vertex; <br>
+     * <b>distance</b> - represents the distance traveLled to reach the vertex using roads only <br>
+     * <b>flightDistance</b> - represents the distance travelled to reach the vertex using exactly one flight
+     * 
+     * @param graph the graph in which to find the path
+     * @param s starting vertex
+     * @param t target vertex
      */
     private static void dijkstras(WeightedGraph graph, int s, int t) {
         
@@ -67,7 +72,7 @@ public class Bumped {
                 //edge is a road, update nbr's road distance and flightDistance if necessary
                 } else {
                     
-                    //update distance using roads only
+                    //update distance using roads only (compare distance to Long.MAX_VALUE first to avoid overflow issues)
                     if (cur.distance < Long.MAX_VALUE && (cur.distance + e.weight < nbr.distance)) {
                         nbr.distance = cur.distance+e.weight;
                         update = true;
