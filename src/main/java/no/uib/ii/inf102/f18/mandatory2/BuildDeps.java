@@ -16,37 +16,29 @@ public class BuildDeps {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         Kattio io = new Kattio(System.in, System.out);
-
-        
         
         int n = Integer.parseInt(br.readLine());
         graph = new DirectedGraph(n);
         HashMap<String, Integer> nodes = new HashMap<>();
         String names[] = new String[n];
-        int nameN = -1;
+        int nodeNumber = -1;
         
         for (int i=0; i<n; i++) {
-            String line[] = br.readLine().split("\\s");
-            String name = line[0].substring(0, line[0].length()-1);
-            if (!nodes.containsKey(name)) {
-                nodes.put(name, ++nameN);
-                names[nameN] = name;
+            String dependencies[] = br.readLine().split("\\s");
+            String id = dependencies[0].substring(0, dependencies[0].length()-1); //remove : from substring after split
+            if (!nodes.containsKey(id)) {
+                nodes.put(id, ++nodeNumber);
+                names[nodeNumber] = id;
             }
             
-            for (int j=1; j<line.length; j++) {
-                if (!nodes.containsKey(line[j])) { 
-                    nodes.put(line[j], ++nameN);
-                    names[nameN] = line[j];
+            for (int j=1; j<dependencies.length; j++) {
+                if (!nodes.containsKey(dependencies[j])) { 
+                    nodes.put(dependencies[j], ++nodeNumber);
+                    names[nodeNumber] = dependencies[j];
                 }
-                graph.addEdge(nodes.get(line[j]), nodes.get(name));
+                graph.addEdge(nodes.get(dependencies[j]), nodes.get(id));
             }
         }
-        
-//        for (int i=0; i<graph.getSize(); i++) {
-//            for (int nbr : graph.adj(i)) {
-//                System.out.println("Edge from " + i + " - " + names[i] + " to " + nbr + " - " + names[nbr]);
-//            }
-//        }
         
         String target = br.readLine();
         
@@ -58,17 +50,6 @@ public class BuildDeps {
             order[--n] = names[x];
         }
         
-        //find and print changed file, then print files needing re-compilation in order
-//        boolean start = false;
-//        for (int i=0; i<graph.getSize(); i++) {
-//            if (!start && order[i].equals(target)) {
-//                start = true;
-//                io.println(target);
-//            } else  if (start){
-//                io.println(order[i]);
-//            }
-//        }
-        
         for (int i=0; i<order.length; i++) {
             io.println(order[i]);
         }
@@ -77,7 +58,7 @@ public class BuildDeps {
         io.close();
     }
 
-    private static void topologicalSort(Integer t) {
+    private static void topologicalSort(int t) {
         pre = new int[graph.getSize()];
         post = new int[graph.getSize()];
         stack = new Stack<Integer>();
@@ -88,7 +69,6 @@ public class BuildDeps {
         }
         
         time = 0;
-        
         depthFirstSearch(t);
     }
 
