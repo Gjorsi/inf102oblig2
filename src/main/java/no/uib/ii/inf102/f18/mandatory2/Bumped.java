@@ -26,7 +26,7 @@ public class Bumped {
             graph.addFlight(io.getInt(), io.getInt());
         }
         
-        dijkstras(graph, s, t);
+        dijkstras(graph, s, t, n);
         
         io.println(Math.min(graph.getVertex(t).distance, graph.getVertex(t).flightDistance));
         
@@ -47,20 +47,23 @@ public class Bumped {
      * @param s starting vertex
      * @param t target vertex
      */
-    private static void dijkstras(WeightedGraph graph, int s, int t) {
+    private static void dijkstras(WeightedGraph graph, int s, int t, int n) {
         
         Queue<Vertex> working = new PriorityQueue<>();
         graph.getVertex(s).distance = 0;
+        boolean visited[] = new boolean[n];
         
         working.add(graph.getVertex(s));
         
         while(!working.isEmpty()) {
             Vertex cur = working.poll();
+            visited[cur.id] = true;
             
             for(Edge e : cur.nbrs) {
                 Vertex nbr = graph.getVertex(e.dest);
                 
                 boolean update = false;
+                if (visited[nbr.id]) continue;
                 
                 //edge is a flightRoute, update flightDistance if it provides a shorter route
                 if (e.flightRoute) {
