@@ -12,4 +12,12 @@ public class Event {
         this.date = date;
         this.title = title;
     }
+    
+    public int hashCode() {
+        return date.hashCode()*title.hashCode();
+    }
+    
+    public boolean equals(Object other) {
+        return this.hashCode() == other.hashCode();
+    }
 }

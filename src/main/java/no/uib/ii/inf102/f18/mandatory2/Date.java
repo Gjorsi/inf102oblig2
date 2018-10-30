@@ -13,4 +13,12 @@ public final class Date {
         this.year = year;
         this.day = day;
     }
+    
+    public int hashCode() {
+        return year*day*month.toString().hashCode();
+    }
+    
+    public boolean equals(Object other) {
+        return this.hashCode() == other.hashCode();
+    }
 }
