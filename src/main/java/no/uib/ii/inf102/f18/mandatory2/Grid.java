@@ -56,10 +56,8 @@ public class Grid {
 
     private static int breadthFirstSearch(IGraph<Integer> graph, int target) {
         int distance[] = new int[target+1];
-        int parent[] = new int[target+1];
         for (int i=1; i<=target; i++) {
             distance[i] = Integer.MAX_VALUE;
-            parent[i] = -1;
         }
         
         Queue<Integer> queue  = new ArrayDeque<>();
@@ -69,7 +67,6 @@ public class Grid {
             int vertex = queue.poll();
             for (int nbr : graph.adj(vertex)) {
                 if (distance[nbr] > (distance[vertex] + 1)) {
-                    parent[nbr] = vertex;
                     distance[nbr] = distance[vertex] + 1;
                     queue.add(nbr);
                 }

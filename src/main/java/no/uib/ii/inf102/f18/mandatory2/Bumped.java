@@ -26,7 +26,7 @@ public class Bumped {
             graph.addFlight(io.getInt(), io.getInt());
         }
         
-        dijkstras(graph, s, t, n);
+        dijkstras(graph, s, n);
         
         io.println(Math.min(graph.getVertex(t).distance, graph.getVertex(t).flightDistance));
         
@@ -40,14 +40,14 @@ public class Bumped {
      * 
      * To make sure the shortest path is chosen with maximum one flight,
      * this implementation stores two separate distance-variables for each vertex; <br>
-     * <b>distance</b> - represents the distance traveLled to reach the vertex using roads only <br>
+     * <b>distance</b> - represents the distance travelled to reach the vertex using roads only <br>
      * <b>flightDistance</b> - represents the distance travelled to reach the vertex using exactly one flight
      * 
      * @param graph the graph in which to find the path
      * @param s starting vertex
      * @param t target vertex
      */
-    private static void dijkstras(WeightedGraph graph, int s, int t, int n) {
+    private static void dijkstras(WeightedGraph graph, int s, int n) {
         
         Queue<Vertex> working = new PriorityQueue<>();
         graph.getVertex(s).distance = 0;
