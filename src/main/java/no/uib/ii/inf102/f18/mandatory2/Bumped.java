@@ -60,10 +60,11 @@ public class Bumped {
             visited[cur.id] = true;
             
             for(Edge e : cur.nbrs) {
+                if (visited[e.dest]) continue;
+                
                 Vertex nbr = graph.getVertex(e.dest);
                 
                 boolean update = false;
-                if (visited[nbr.id]) continue;
                 
                 //edge is a flightRoute, update flightDistance if it provides a shorter route
                 if (e.flightRoute) {

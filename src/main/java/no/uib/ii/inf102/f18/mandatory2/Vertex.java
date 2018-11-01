@@ -17,6 +17,6 @@ public class Vertex implements Comparable<Vertex> {
 
     @Override
     public int compareTo(Vertex that) {
-        return Long.compare(Math.min(this.distance,  this.flightDistance), Math.min(that.distance, that.flightDistance));
+        return Long.compare((Long)Math.min(this.distance,  this.flightDistance), (Long)Math.min(that.distance, that.flightDistance));
     }
 }
