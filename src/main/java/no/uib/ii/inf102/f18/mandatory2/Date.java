@@ -13,12 +13,32 @@ public final class Date {
         this.year = year;
         this.day = day;
     }
-    
+
+    @Override
     public int hashCode() {
-        return year*day*month.toString().hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + day;
+        result = prime * result + month.hashCode();
+        result = prime * result + year;
+        return result;
     }
-    
-    public boolean equals(Object other) {
-        return this.hashCode() == other.hashCode();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Date other = (Date) obj;
+        if (day != other.day)
+            return false;
+        if (month != other.month)
+            return false;
+        if (year != other.year)
+            return false;
+        return true;
     }
 }
