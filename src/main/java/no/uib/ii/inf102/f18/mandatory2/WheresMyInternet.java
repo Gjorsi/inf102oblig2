@@ -17,6 +17,7 @@ public class WheresMyInternet {
         boolean hasInternet[] = depthFirstSearch(graph);
         boolean allConnected = true;
         
+        //print the houses not connected to the Internet.
         for (int i=2; i<=n; i++) {
             if (!hasInternet[i]) {
                 io.println(i);
@@ -29,24 +30,24 @@ public class WheresMyInternet {
         io.close();
     }
 
+    /**
+     * A DFS which starts at house 1 and marks every house it visits in the hasInt[] array
+     * @param graph the graph in which to search
+     * @return a boolean array indicating which houses are connected
+     */
     private static boolean[] depthFirstSearch(IGraph<Integer> graph) {
         boolean hasInt[] = new boolean [graph.getSize()+1];
-        int parent[] = new int[graph.getSize()+1];
-        for (int i=1; i<=graph.getSize(); i++) {
-            parent[i] = -1;
-        }
         
-        dfs(graph, hasInt, parent, 1);
+        dfs(graph, hasInt, 1);
         
         return hasInt;
     }
     
-    private static void dfs (IGraph<Integer> graph, boolean[] hasInt, int[] parent, int u) {
+    private static void dfs (IGraph<Integer> graph, boolean[] hasInt, int u) {
         hasInt[u] = true;
         for(int nbr : graph.adj(u)) {
             if (!hasInt[nbr]) {
-                parent[nbr] = u;
-                dfs(graph, hasInt, parent, nbr);
+                dfs(graph, hasInt, nbr);
             }
         }
     }

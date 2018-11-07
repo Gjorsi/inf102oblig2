@@ -17,6 +17,7 @@ public class Grid {
         int weight = 0;
         int cur = 0;
         
+        //read the grid, find and add edges
         for (int i=1; i<=n; i++) {
             line = io.getWord();
             for (int j=1; j<=m; j++) {
@@ -48,16 +49,22 @@ public class Grid {
         
         int distance = breadthFirstSearch(graph, n*m-1);
         
-        if (distance < Integer.MAX_VALUE) io.println(distance);
-        else io.println(-1);
+        io.print(distance);
         
         io.close();
     }
 
+    /**
+     * A BFS to find shortest path (number of "hops") from vertex 0 to target
+     * 
+     * @param graph the graph in which to search
+     * @param target the vertex to find distance to, in this implementation, it is also the last vertex
+     * @return distance to target
+     */
     private static int breadthFirstSearch(IGraph<Integer> graph, int target) {
         int distance[] = new int[target+1];
         for (int i=1; i<=target; i++) {
-            distance[i] = Integer.MAX_VALUE;
+            distance[i] = -1;
         }
         
         Queue<Integer> queue  = new ArrayDeque<>();
@@ -66,7 +73,7 @@ public class Grid {
         while (!queue.isEmpty()) {
             int vertex = queue.poll();
             for (int nbr : graph.adj(vertex)) {
-                if (distance[nbr] > (distance[vertex] + 1)) {
+                if (distance[nbr] > (distance[vertex] + 1) || distance[nbr] == -1) {
                     distance[nbr] = distance[vertex] + 1;
                     queue.add(nbr);
                 }
