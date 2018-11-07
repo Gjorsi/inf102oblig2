@@ -6,7 +6,6 @@ import java.util.Queue;
 
 /**
  * @author Carl August Gjørsvik
- *
  */
 public class Bumped {
     
@@ -57,6 +56,7 @@ public class Bumped {
         graph.getVertex(s).distance = 0;
         boolean visited[] = new boolean[n];
         HashSet<Integer> inQueue = new HashSet<>();
+        // remove distance tracking from vertices, now using these arrays
         dist = new Long[n];
         fdist = new Long[n]; 
         
@@ -106,6 +106,7 @@ public class Bumped {
                 }
                 
                 if (update) {
+                    // use working to check, no need for inQueue?
                     if (inQueue.contains(nbr)) {
                         working.changeKey(nbr, Math.min(dist[nbr], fdist[nbr]));
                     } else {
