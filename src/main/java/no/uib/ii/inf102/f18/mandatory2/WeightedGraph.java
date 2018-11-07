@@ -10,7 +10,7 @@ public class WeightedGraph {
         this.vertices = new HashMap<>();
         
         for (int i=0; i<n; i++) {
-            this.vertices.put(i, new Vertex(i, Long.MAX_VALUE/2, Long.MAX_VALUE/2));
+            this.vertices.put(i, new Vertex(i));
         }
     }
     

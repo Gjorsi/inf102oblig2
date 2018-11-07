@@ -1,10 +1,9 @@
 package no.uib.ii.inf102.f18.mandatory2;
 
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
 /**
+ * Solves kattis problem Bumped with an implementation of Dijkstra's shortest path.
+ * Uses IndexMinPQ data structure which was made for the previous mandatory.
+ * 
  * @author Carl August Gjørsvik
  */
 public class Bumped {
@@ -39,12 +38,14 @@ public class Bumped {
     /**
      * A modified implementation of Dijkstra's shortest path. <br>
      * It takes into account that some edges are "flightRoutes", with cost zero,
-     * but only one flight might be used in the path.
+     * but only one flight might be used in any path.
      * 
      * To make sure the shortest path is chosen with maximum one flight,
-     * this implementation stores two separate distance-variables for each vertex; <br>
-     * <b>distance</b> - represents the distance travelled to reach the vertex using roads only <br>
-     * <b>flightDistance</b> - represents the distance travelled to reach the vertex using exactly one flight
+     * this implementation stores two separate distance-variables for each vertex V; <br>
+     * <b>dist[V]</b> - represents the distance travelled to reach vertex V using roads only. <br>
+     * <b>fdist[V]</b> - represents the distance travelled to reach vertex V using exactly one flight. <br>
+     * The vertices are processed in an Indexed Min-priorityqueue, 
+     * sorted by the minimum of their distances (fdist or dist).
      * 
      * @param graph the graph in which to find the path
      * @param s starting vertex
@@ -53,10 +54,8 @@ public class Bumped {
     private static void dijkstras(WeightedGraph graph, int s, int n, int t) {
         
         IndexMinPQ<Long> working = new IndexMinPQ<>(n);
-        graph.getVertex(s).distance = 0;
         boolean visited[] = new boolean[n];
-        HashSet<Integer> inQueue = new HashSet<>();
-        // remove distance tracking from vertices, now using these arrays
+        
         dist = new Long[n];
         fdist = new Long[n]; 
         
@@ -67,12 +66,10 @@ public class Bumped {
         dist[s] = fdist[s] = 0L;
         
         working.add(s, 0L);
-        inQueue.add(s);
         
         while(!working.isEmpty()) {
             int cur = working.poll();
-            inQueue.remove(cur);
-            if (cur == t) return;
+            if (cur == t) return; //
             visited[cur] = true;
             
             for(Edge e : graph.getVertex(cur).nbrs) {
@@ -92,7 +89,7 @@ public class Bumped {
                 //edge is a road, update nbr's road distance and flightDistance if necessary
                 } else {
                     
-                    //update distance using roads only (compare distance to Long.MAX_VALUE first to avoid overflow issues)
+                    //update distance using roads only 
                     if (dist[cur] + e.weight < dist[nbr]) {
                         dist[nbr] = dist[cur]+e.weight;
                         update = true;
@@ -106,13 +103,11 @@ public class Bumped {
                 }
                 
                 if (update) {
-                    // use working to check, no need for inQueue?
-                    if (inQueue.contains(nbr)) {
+                    if (working.contains(nbr)) {
                         working.changeKey(nbr, Math.min(dist[nbr], fdist[nbr]));
                     } else {
                         working.add(nbr, Math.min(dist[nbr], fdist[nbr]));
                     }
-                    inQueue.add(nbr);
                 }
             }
         }
