@@ -1,5 +1,6 @@
 package no.uib.ii.inf102.f18.mandatory2;
 
+import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -8,6 +9,9 @@ import java.util.Queue;
  *
  */
 public class Bumped {
+    
+    static Long[] dist;
+    static Long[] fdist;
 
     public static void main(String[] args) {
         Kattio io = new Kattio(System.in, System.out);
@@ -26,9 +30,9 @@ public class Bumped {
             graph.addFlight(io.getInt(), io.getInt());
         }
         
-        dijkstras(graph, s, n);
+        dijkstras(graph, s, n, t);
         
-        io.println(Math.min(graph.getVertex(t).distance, graph.getVertex(t).flightDistance));
+        io.println(Math.min(dist[t], fdist[t]));
         
         io.close();
     }
@@ -47,29 +51,41 @@ public class Bumped {
      * @param s starting vertex
      * @param t target vertex
      */
-    private static void dijkstras(WeightedGraph graph, int s, int n) {
+    private static void dijkstras(WeightedGraph graph, int s, int n, int t) {
         
-        Queue<Vertex> working = new PriorityQueue<>();
+        IndexMinPQ<Long> working = new IndexMinPQ<>(n);
         graph.getVertex(s).distance = 0;
         boolean visited[] = new boolean[n];
+        HashSet<Integer> inQueue = new HashSet<>();
+        dist = new Long[n];
+        fdist = new Long[n]; 
         
-        working.add(graph.getVertex(s));
+        for (int i=0; i<n ; i++) {
+            dist[i] = fdist[i] = Long.MAX_VALUE/2;
+        }
+        
+        dist[s] = fdist[s] = 0L;
+        
+        working.add(s, 0L);
+        inQueue.add(s);
         
         while(!working.isEmpty()) {
-            Vertex cur = working.poll();
-            visited[cur.id] = true;
+            int cur = working.poll();
+            inQueue.remove(cur);
+            if (cur == t) return;
+            visited[cur] = true;
             
-            for(Edge e : cur.nbrs) {
+            for(Edge e : graph.getVertex(cur).nbrs) {
                 if (visited[e.dest]) continue;
                 
-                Vertex nbr = graph.getVertex(e.dest);
+                int nbr = e.dest;
                 
                 boolean update = false;
                 
                 //edge is a flightRoute, update flightDistance if it provides a shorter route
                 if (e.flightRoute) {
-                    if (cur.distance < nbr.flightDistance) {
-                        nbr.flightDistance = cur.distance;
+                    if (dist[cur] < fdist[nbr]) {
+                        fdist[nbr] = dist[cur];
                         update = true;
                     }
                     
@@ -77,20 +93,25 @@ public class Bumped {
                 } else {
                     
                     //update distance using roads only (compare distance to Long.MAX_VALUE first to avoid overflow issues)
-                    if (cur.distance < Long.MAX_VALUE && (cur.distance + e.weight < nbr.distance)) {
-                        nbr.distance = cur.distance+e.weight;
+                    if (dist[cur] + e.weight < dist[nbr]) {
+                        dist[nbr] = dist[cur]+e.weight;
                         update = true;
                     }
                     
                     //update flightDistance to nbr if there is a path to cur using a flight
-                    if (cur.flightDistance < Long.MAX_VALUE && (cur.flightDistance + e.weight < nbr.flightDistance)) {
-                        nbr.flightDistance = cur.flightDistance + e.weight;
+                    if (fdist[cur] + e.weight < fdist[nbr]) {
+                        fdist[nbr] = fdist[cur] + e.weight;
                         update = true;
                     }
                 }
                 
                 if (update) {
-                    working.offer(nbr);
+                    if (inQueue.contains(nbr)) {
+                        working.changeKey(nbr, Math.min(dist[nbr], fdist[nbr]));
+                    } else {
+                        working.add(nbr, Math.min(dist[nbr], fdist[nbr]));
+                    }
+                    inQueue.add(nbr);
                 }
             }
         }
